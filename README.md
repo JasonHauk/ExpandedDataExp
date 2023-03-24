@@ -20,21 +20,21 @@ To my shock the model ran surprisingly well. It did well with the data it was tr
 One problem I saw from this result was that the R^2 between the training and testing set were quite different and indicative of overfitting. I'll want to address that problem as I approach my final model.
 
 # Final Model
-Since it was clear to me that the variables I already had were good indicators, I felt that with even a few additions and tweaks my model would be very good. With that in mind I added only ywo features to my final model, but features I thought would cover the gaps left by my current model. 
+It was clear to me that the features I already had were good indicators. I felt that my model would only require a a few additions and tweaks to become great. With that in mind, I added only two new features to my final model. I thought these features would cover the gaps left out by my current model. 
 
-The first feature I added was 'earned gpm' or gold per minute. In a low kill game of league, many players might have little to no kills, but big difference can arise based on how many smaller minions the players are killing, which can lead to big gold discrepancies. These gold differences can be game winning or losing, and I thought that this would be an important inclusion to my model.
+The first feature I added was 'earned gpm' or gold per minute. In a low kill game of league, many players might have little to no kills, but big differences can arise based on how many smaller minions the players are killing, which can lead to big gold discrepancies. These gold differences can be game winning or losing and I thought that this would be an important inclusion to my model.
 
-Next, I'd tried to stay focused on the individual player with my other stats, but it's impossible to ignore that league is a team game. One player alone cannot tell the whole story and while I still wanted to keep my focus on an individual players performance, I allowed my model one indulgence 'teamkills' so that it could get a rough estimate as to how the rest of the team was player and how the game was going.
+Next, I'd tried to stay focused on the individual player with my other stats, but it's impossible to ignore that league is a team game. One player alone cannot tell the whole story and while I still wanted to keep my focus on an individual players performance, I allowed my model one indulgence 'teamkills' so that it could get a rough estimate as to how the rest of the team was playing and how the game was going.
 
-Besides adding these two features I also made some changes to them and my previous features to hopefully make them more meaningful. Firstly, I believed that gamelength by itself could tell the model nothing about a win or a loss and was only useful to put the other features into perspective. So, I used gamelength to transform kills, deaths, assists, and teamkills into those stats per second. An example of why this is more indicative of a win of a loss is if I told someone that a player had 15 kills, they might say that's not many for a game that lasted thirty minutes. But, if the game was only 15 minutes then that meant it was a lot of kills.
+Besides adding these two features I also made some changes to them and my previous features to hopefully make them more meaningful. Firstly, I believed that gamelength by itself could tell the model nothing about a win or a loss and was only useful to put the other features into perspective. So, I used gamelength to transform kills, deaths, assists, and teamkills into those stats per second. Let me explaing why this is more indicative of a win of a loss. If I told someone that a player had 15 kills, they might say that's not many for a game that lasted thirty minutes. But, if the game was only 15 minutes then that meant it was a lot of kills. Thus, when time is accounted for these statistics are more meaningful.
 
-Finally, these transformed columns were hard to follow since now they were pretty small decimals since it was kills per second and so on, so to make it more understandable I converted all these quanitiative columns to their z-scores. This would make it easier for a viewer to understand how these numbers compare to the other values in that feature.
+Finally, these transformed columns were hard to follow since now they were pretty small decimals since it was kills per second and so on, to make it more understandable I converted all these quanitiative columns to their z-scores. This would make it easier for a viewer to understand how these numbers compare to the other values in that feature.
 
 Now I had new and improved features, but still had to address the overfitting that occured. It was time to find what hyperparameter would work best, so that my Decision Tree Classifier wasn't going to deep and overfitting to my training data.
 
-I ran the model with different depths (ranging from 1 to 20) to test how they performed, and discovered that a depth of 7 minimized my training and testing error. It resulted in an R^2 of 0.9118 for my training data and 0.9083 for my testing data which I was really happy with.
+I ran the model with different depths (ranging from 1 to 20) to test how they performed, and discovered that a depth of 7 minimized my testing error. It resulted in an R^2 of 0.9118 for my training data and 0.9083 for my testing data, which I was really happy with.
 
-I wanted to make sure that there wasn't too much bias though towards false positives or negatives so I decided to look at the confusion matrix and gather some statistics to measure the models performance. I found:
+I also wanted to make sure that there wasn't too much bias towards false positives or negatives so I decided to look at the confusion matrix and gather some statistics to measure the models performance. I found:
 
 Accuracy was: 0.9082502412351239
 
@@ -45,6 +45,8 @@ Recall was: 0.9069191434963247
 F1 score was: 0.9086615433877682
 
 <img src="assets/conf_matrix.png">
+
+These scores all looked pretty good. This indicated a healthy, successful model.
 
 # Fairness Analysis
 I wanted to understand where some of my models pitfalls might still lie. Personally, I was interested in how our model was able to handle players with high numbers of kills and if the model had the same accuracy when dealing with players that had less kills. Since my kills data was already broken down into z-score I decided to split up these two sets of players right down the middle on 0, the average of my z-scores. Players with more than a z-score of 0 would be my "high kill" players, while players with less than or equal to a z-score of 0, would be my "low/avg kill" players. I would evaluate the model based on its accuracy.
