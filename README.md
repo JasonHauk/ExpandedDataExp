@@ -40,3 +40,5 @@ Accuracy was: 0.9082502412351239
 Precision was: 0.9104106512672442
 Recall was: 0.9069191434963247
 F1 score was: 0.9086615433877682
+
+<img src="assets/conf_matrix.png">
