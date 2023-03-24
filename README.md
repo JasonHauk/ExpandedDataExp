@@ -37,8 +37,26 @@ I ran the model with different depths (ranging from 1 to 20) to test how they pe
 I wanted to make sure that there wasn't too much bias though towards false positives or negatives so I decided to look at the confusion matrix and gather some statistics to measure the models performance. I found:
 
 Accuracy was: 0.9082502412351239
+
 Precision was: 0.9104106512672442
+
 Recall was: 0.9069191434963247
+
 F1 score was: 0.9086615433877682
 
 <img src="assets/conf_matrix.png">
+
+# Fairness Analysis
+I wanted to understand where some of my models pitfalls might still lie. Personally, I was interested in how our model was able to handle players with high numbers of kills and if the model had the same accuracy when dealing with players that had less kills. Since my kills data was already broken down into z-score I decided to split up these two sets of players right down the middle on 0, the average of my z-scores. Players with more than a z-score of 0 would be my "high kill" players, while players with less than or equal to a z-score of 0, would be my "low/avg kill" players. I would evaluate the model based on its accuracy.
+
+My null hypothesis for the permutation test was that the model is fair and that the accuracy between high kill and low/avg kill players would be the same. The alternate hypothesis was that the model is more accurate for players with low/avg kill values. The test statistic would be the diffurence in accuracy.
+
+Here were the results:
+
+<iframe src="assets/High_Kills.html" width=600 height=600 frameBorder=0></iframe>
+
+The resulting p-value was 0, and thus less than the significance level of 0.05. This indicates our data supports the alternative hypothesis that the model is better for players with low/avg levels of kills.
+
+# Conclusion
+While my final model might still work better for some data than others, I'm very pleased with its results. It performs highly on almost every metric I used to gauge its performance and it generalizes almost as well as it trains!
+
